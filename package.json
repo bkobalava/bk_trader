@@ -1,0 +1,30 @@
+{
+  "name": "bk_trader",
+  "version": "1.0.0",
+  "description": "binance.com trader bot",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["bot", "trader"],
+  "author": "Badri Kobalava <bkobalava@gmail.com>",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+	"url": "https://github.com/bkobalava/bk_trader.git"
+  },
+  "bugs": {
+    "url": "https://github.com/bkobalava/bk_trader/issues"
+  },
+  "homepage": "https://github.com/bkobalava/bk_trader#readme",
+    "dependencies": {
+    "kdj": "1.0.4",
+    "node-binance-api": "0.7.1",
+    "node-telegram-bot-api": "3.5.0",
+    "express": "4.16.3",
+    "pm2": "2.10.4"
+  },
+  "engines": {
+    "node": "10.4.0"
+	}
+}
