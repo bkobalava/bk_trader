@@ -1,5 +1,5 @@
 // var Indicator = require('./bk_trader/indicator.js');
-var Indicator = require('./indicator.js');
+var Indicator = require('./kdj_ind.js');
 ///////////////////////////////////////////////
 // const TeleBot = require('telebot');
 // const TOKEN = '579762785:AAH0u9I-puuHw6ZeWmBKLJ9_d9ho_6XSyhg';
@@ -134,7 +134,7 @@ jPrevCurr = jCurr;
 
       // if (jCurr < 0 && buyPrice == 0) { /////////////////Algotithm 1
       // if (jOld - jCurr > 10 && buyPrice == 0) { /////////////////Algotithm 2
-      if ((jOld > jLast) && (jCurr > jLast) && (buyPrice == 0)) { /////////////////Algotithm 3
+      if ((jOld > jLast) && (jCurr - jLast > 20) && (buyPrice == 0)) { /////////////////Algotithm 3
 	  
 buyPrice = closeA[ticks.length - 2]
 console.log(buyPrice, jOld, jLast, jCurr, currdatetime, 'BUY!')
@@ -163,7 +163,7 @@ sellPrice = closeA[ticks.length - 2];
 profit = (sellPrice - buyPrice) / buyPrice * 100;
 // if (profit < -2 || jCurr > 90) { /////////////////Algotithm 1
 // if (profit < -2 || jCurr - jOld > 10) { /////////////////Algotithm 2
-if (profit < -2 || (jOld < jLast && jLast > jCurr)) { /////////////////Algotithm 3
+if (profit < -2 || (jLast - jOld > 20 && jLast > jCurr)) { /////////////////Algotithm 3
 
 console.log(sellPrice, jOld, jLast, jCurr, currdatetime, profit.toFixed(2), "%, SELL!");
 buyPrice = 0;
