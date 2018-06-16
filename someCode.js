@@ -27,12 +27,10 @@ function max(arr, num) {
   var res = [];
     for (var n = 0; n < arr.length; n++) {
 		if ((n + num) > (arr.length - 1)) {
-		// const maximum = arr => Math.max(arr.slice(n, (arr.length - 1)));
 		// res.push(Math.max(arr.slice(n, (arr.length - 1))));
 		// res.push(arr.slice(n, (arr.length - 1)).reduce(function(acc, val) { return acc + val; }, 0));
 		res.push(Math.max.apply(Math, arr.slice(n, (arr.length))));
 		}else{
-		// const maximum = arr => Math.max(arr.slice(n, (n + num)));
 		// res.push(Math.max(arr.slice(n, (n + num))));
 		// res.push(arr.slice(n, (n + num)).reduce(function(acc, val) { return acc + val; }, 0));
 		res.push(Math.max.apply(Math, arr.slice(n, (n + num))));
@@ -59,10 +57,10 @@ function min(arr, num) {
   return res;
 }
 //////////////////////////////////////////////////////////////////////////////////
+    // rsvs.push((close - min) / (max - min) * 100);
 	// ks = sma(rsvs, 3)
 	// ds = sma(ks, 3)
-    // for (var i = 0; i < ks.length; i++) 
-    // js.push(3 * ks[i] - 2 * ds[i]);
+    // for (var i = 0; i < ks.length; i++) js.push(3 * ks[i] - 2 * ds[i]);
 //////////////////////////////////////////////////////////////////////////////////
 console.log(max([5, 4, 9, 8, 789, 4578, 545, 785, 4589, 998], 3));
 console.log(min([5, 4, 9, 8, 789, 4578, 545, 785, 4589, 998], 3));
