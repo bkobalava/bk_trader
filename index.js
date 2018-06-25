@@ -116,6 +116,7 @@ rslt.push([highA[i], lowA[i], closeA[i]]);
 
 // var jNow = Indicator.KDJ(rslt).j;
 var jNow = Indicator.KDJ(rslt);
+// console.log(jNow);
 var jCurr = jNow[2];
 jCurr = jCurr.toFixed(1);
 var jLast = jNow[1];
@@ -134,7 +135,7 @@ jPrevCurr = jCurr;
 
       // if (jCurr < 0 && buyPrice == 0) { /////////////////Algotithm 1
       // if (jOld - jCurr > 10 && buyPrice == 0) { /////////////////Algotithm 2
-      if ((jOld > jLast) && (jCurr - jLast > 20) && (buyPrice == 0)) { /////////////////Algotithm 3
+      if ((jOld > jLast) && (jCurr > jLast) && (jLast < 7) && (buyPrice == 0)) { /////////////////Algotithm 3
 	  
 buyPrice = closeA[ticks.length - 2]
 console.log(buyPrice, jOld, jLast, jCurr, currdatetime, 'BUY!')
@@ -163,7 +164,7 @@ sellPrice = closeA[ticks.length - 2];
 profit = (sellPrice - buyPrice) / buyPrice * 100;
 // if (profit < -2 || jCurr > 90) { /////////////////Algotithm 1
 // if (profit < -2 || jCurr - jOld > 10) { /////////////////Algotithm 2
-if (profit < -2 || (jLast - jOld > 20 && jLast > jCurr)) { /////////////////Algotithm 3
+if (profit < - 2 || (jLast - jOld > 5 && jLast > jCurr)) { /////////////////Algotithm 3
 
 console.log(sellPrice, jOld, jLast, jCurr, currdatetime, profit.toFixed(2), "%, SELL!");
 buyPrice = 0;

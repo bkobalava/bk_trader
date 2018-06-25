@@ -7,16 +7,16 @@
 // bot.sendMessage(USER, "Hello!");
 
 
-var token = '579762785:AAH0u9I-puuHw6ZeWmBKLJ9_d9ho_6XSyhg';
-var Bot = require('node-telegram-bot-api'),
-    bot = new Bot(token, { polling: true });
-console.log('bot server started...');
-bot.onText(/^\/hi (.+)$/, function (msg, match) {
-  var name = match[1];
-  bot.sendMessage(msg.chat.id, 'Hello Sir' + name + '!').then(function () {
-    reply sent!
-  });
-});
+// var token = '579762785:AAH0u9I-puuHw6ZeWmBKLJ9_d9ho_6XSyhg';
+// var Bot = require('node-telegram-bot-api'),
+    // bot = new Bot(token, { polling: true });
+// console.log('bot server started...');
+// bot.onText(/^\/hi (.+)$/, function (msg, match) {
+  // var name = match[1];
+  // bot.sendMessage(msg.chat.id, 'Hello Sir' + name + '!').then(function () {
+    // reply sent!
+  // });
+// });
 
 // https://api.telegram.org/bot579762785:AAH0u9I-puuHw6ZeWmBKLJ9_d9ho_6XSyhg/getUpdates
 //"id":522244663,"is_bot":false,"first_name":"Badri","last_name":"Kobalava","username":"bkobalava"
@@ -239,7 +239,7 @@ jPrevCurr = jCurr;
 	  
 buyPrice = closeA[ticks.length - 2]
 console.log(buyPrice, jOld, jLast, jCurr, currdatetime, 'BUY!');
-bot.sendMessage(buyPrice, jOld, jLast, jCurr, currdatetime, 'BUY!');
+// bot.sendMessage(buyPrice, jOld, jLast, jCurr, currdatetime, 'BUY!');
 
 fs.writeFile('./bk_trader/buyPrice.txt',buyPrice,function(err){
 	if(err)
@@ -269,7 +269,7 @@ profit = (sellPrice - buyPrice) / buyPrice * 100;
 if (profit < - 2 || (jLast > jOld && jLast - jCurr > 5)) { /////////////////Algotithm 3
 
 console.log(sellPrice, jOld, jLast, jCurr, currdatetime, profit.toFixed(2), "%, SELL!");
-bot.sendMessage(sellPrice, jOld, jLast, jCurr, currdatetime, profit.toFixed(2), "%, SELL!");
+// bot.sendMessage(sellPrice, jOld, jLast, jCurr, currdatetime, profit.toFixed(2), "%, SELL!");
 buyPrice = 0;
 fs.writeFile('./bk_trader/buyPrice.txt',buyPrice,function(err){  //
 	if(err)
