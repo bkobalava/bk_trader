@@ -224,7 +224,7 @@ jOld = jOld.toFixed(1);
 
 var currdatetime = new Date();
 // if (prevLast != jNow[0] && prevLast != 0) {
-if (prevLast != jCurr) {
+if (prevLast != jLast) {
 console.log(prevLast, jCurr);
 console.log(closeA[ticks.length - 2], jOld, jLast, jCurr, trend.toFixed(2), currdatetime, buyPrice);
 prevLast = jLast;
