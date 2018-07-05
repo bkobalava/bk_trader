@@ -7,16 +7,16 @@
 // bot.sendMessage(USER, "Hello!");
 
 
-// var token = '579762785:AAH0u9I-puuHw6ZeWmBKLJ9_d9ho_6XSyhg';
-// var Bot = require('node-telegram-bot-api'),
-    // bot = new Bot(token, { polling: true });
-// console.log('bot server started...');
-// bot.onText(/^\/hi (.+)$/, function (msg, match) {
-  // var name = match[1];
-  // bot.sendMessage(msg.chat.id, 'Hello Sir' + name + '!').then(function () {
-    // reply sent!
-  // });
-// });
+var token = '579762785:AAH0u9I-puuHw6ZeWmBKLJ9_d9ho_6XSyhg';
+var Bot = require('node-telegram-bot-api'),
+    bot = new Bot(token, { polling: true });
+console.log('bot server started...');
+bot.onText(/^\/hi (.+)$/, function (msg, match) {
+  var name = match[1];
+  bot.sendMessage(msg.chat.id, 'Hello Sir' + name + '!').then(function () {
+    reply sent!
+  });
+});
 
 // https://api.telegram.org/bot579762785:AAH0u9I-puuHw6ZeWmBKLJ9_d9ho_6XSyhg/getUpdates
 //"id":522244663,"is_bot":false,"first_name":"Badri","last_name":"Kobalava","username":"bkobalava"
@@ -256,7 +256,7 @@ prevCurr = jCurr;
 	  
 buyPrice = closeA[closeA.length - 1]; //hotPrice
 console.log(buyPrice, jArch, jOld, jLast, jCurr, "T:", trend.toFixed(2), "V:", volatility(30), currdatetime, 'BUY!');
-// bot.sendMessage(buyPrice, jArch, jOld, jLast, jCurr, "T:", trend.toFixed(2), "V:", volatility(30), currdatetime, 'BUY!');
+bot.sendMessage(buyPrice, jArch, jOld, jLast, jCurr, "T:", trend.toFixed(2), "V:", volatility(30), currdatetime, 'BUY!');
 
 fs.writeFile('buyPrice.txt',buyPrice,function(err){
 	if(err)
@@ -293,7 +293,7 @@ profit = ((sellPrice - buyPrice) / buyPrice * 100) - 0.1;
 if (profit < -1 || (profit >= 0.5 && closeA[closeA.length - 3] > closeA[closeA.length - 2])) { /////////////////Algotithm 5
 
 console.log(sellPrice, jArch, jOld, jLast, jCurr, "T:", trend.toFixed(2), "V:", volatility(30), currdatetime, "Profit:", profit.toFixed(2), "%, SELL!");
-// bot.sendMessage(sellPrice, jArch, jOld, jLast, jCurr, "T:", trend.toFixed(2), "V:", volatility(30), currdatetime, "Profit:", profit.toFixed(2), "%, SELL!");
+bot.sendMessage(sellPrice, jArch, jOld, jLast, jCurr, "T:", trend.toFixed(2), "V:", volatility(30), currdatetime, "Profit:", profit.toFixed(2), "%, SELL!");
 buyPrice = 0;
 fs.writeFile('buyPrice.txt',buyPrice,function(err){  //
 	if(err)
