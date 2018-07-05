@@ -21,8 +21,7 @@ bot.onText(/^\/hi (.+)$/, function (msg, match) {
 // https://api.telegram.org/bot579762785:AAH0u9I-puuHw6ZeWmBKLJ9_d9ho_6XSyhg/getUpdates
 //"id":522244663,"is_bot":false,"first_name":"Badri","last_name":"Kobalava","username":"bkobalava"
 ///////////////////////////////////////////////
-
-
+process.stdin.setEncoding('utf8');
 fs=require('fs');
 ///////////////////////////////////////////////
 const http = require('http');
@@ -61,7 +60,7 @@ var buyPrice = 0;
 var sellPrice = 0;
 var profit = 0;
 var bank = 0;
-var prevLast = 0;	
+var prevCurr = 0;	
 
 fs.readFile('./bk_trader/buyPrice.txt', function (err, data) {
 	if (err) {
@@ -177,8 +176,8 @@ closeA.push(tick[4]); //close price
 		for (var n = i - 25; n < i + 1; n++) {
 		sum += Number(closeA[n]);  
 		}
-// console.log(sum / 25);	
 		sma.push(sum / 25);
+
 		}
 
 
@@ -201,44 +200,62 @@ closeA.push(tick[4]); //close price
     // for (var i = rsvs.length - 30 ; i < rsvs.length; i++) {
 // console.log(highA[i], maximum[i], lowA[i], minimum[i], closeA[i]);
 	// }
-// console.log('\033c');
 
 var trend = (sma[sma.length - 2] - sma[sma.length - 27]) / sma[sma.length - 2] * 100;
-    
+/////////////////////////////////////////////////////////
+function volatility(n) {  //ბოლო n სანთელში მაქსიმუმ რამდენი პროცენტის მოგების შანსია (რამდენი პროცენტით მერყეობს ფასი)
+var mnm = closeA[closeA.length - (n + 1)];
+var mxm = closeA[closeA.length - (n + 1)];
+for (i = closeA.length - n; i < closeA.length; i++) {
+	if(closeA[i] < mnm) mnm = closeA[i];
+	if(closeA[i] > mxm) mxm = closeA[i];
+}
+rslt = (mxm - mnm) / mnm * 100;
+return rslt.toFixed(1);
+}
+/////////////////////////////////////////////////////////
+
+// console.log(volatility(30));
+
+		
+// console.log('\033c');
     // for (var i = rsvs.length - 30 ; i < rsvs.length; i++) {
-// console.log(closeA[i], ks[i].toFixed(1), ds[i].toFixed(1), js[i].toFixed(1));
+// console.log(closeA[i], "k:", ks[i].toFixed(1), "d:", ds[i].toFixed(1), "j:", js[i].toFixed(1));
 	// }
-    
 
 // console.log(js[js.length-4].toFixed(1), js[js.length-3].toFixed(1), js[js.length-2].toFixed(1), js[js.length-1].toFixed(1), trend.toFixed(2));
 
-var output = js.slice(js.length-4, js.length-1) // ძალიან ძველი, ძველი, წინა, ახალი (მერყევი)
-
-
-var jCurr = js[js.length-1];
+var jHot = js[js.length-1];
+jHot = jHot.toFixed(1);
+var jCurr = js[js.length-2];
 jCurr = jCurr.toFixed(1);
-var jLast = js[js.length-2];
+var jLast = js[js.length-3];
 jLast = jLast.toFixed(1);
-var jOld = js[js.length-3];
+var jOld = js[js.length-4];
 jOld = jOld.toFixed(1);
+var jArch = js[js.length-5];
+jArch = jArch.toFixed(1);
+
 
 var currdatetime = new Date();
-// if (prevLast != jNow[0] && prevLast != 0) {
-if (prevLast != jLast) {
-// console.log(prevLast, jCurr);
-console.log(closeA[ticks.length - 2], jOld, jLast, "T:", trend.toFixed(2), currdatetime, buyPrice);
-prevLast = jLast;
+// if (prevCurr != jNow[0] && prevCurr != 0) {
+if (prevCurr != jCurr) {
+// console.log(prevCurr, jCurr);
+console.log(closeA[closeA.length - 2], jArch, jOld, jLast, jCurr, "T:", trend.toFixed(2), "V:", volatility(30), currdatetime, buyPrice);
+prevCurr = jCurr;
 }
 ///////////////////////////////////////////////BUY!BUY!BUY!BUY!BUY!BUY!BUY!BUY!
 
       // if (jCurr < 0 && buyPrice == 0) { /////////////////Algotithm 1
       // if (jOld - jCurr > 10 && buyPrice == 0) { /////////////////Algotithm 2
       // if ((jOld > jLast) && (jCurr > jLast) && (jLast < 10) && (buyPrice == 0)) { /////////////////Algotithm 3
-      if ((jOld > jLast) && (jCurr - jLast > 5) && (buyPrice == 0) && (trend >= 0)) { /////////////////Algotithm 4
+      // if (jArch >= jOld && jOld > jLast && jCurr - jLast > 5 && buyPrice == 0 && trend >= 0) { /////////////////Algotithm 4
+      // if (jArch > jOld && jOld > jLast && jCurr - jLast > 5 && buyPrice == 0 && jCurr < 30) { /////////////////Algotithm 5
+      if (jArch > jOld && jOld > jLast && jCurr - jLast > 5 && buyPrice == 0) { /////////////////Algotithm 5
 	  
-buyPrice = closeA[ticks.length - 2]
-console.log(buyPrice, jOld, jLast, "T:", trend.toFixed(2), currdatetime, 'BUY!');
-bot.sendMessage(buyPrice, jOld, jLast, "T:", trend.toFixed(2), currdatetime, 'BUY!');
+buyPrice = closeA[closeA.length - 1]; //hotPrice
+console.log(buyPrice, jArch, jOld, jLast, jCurr, "T:", trend.toFixed(2), "V:", volatility(30), currdatetime, 'BUY!');
+bot.sendMessage(buyPrice, jArch, jOld, jLast, jCurr, "T:", trend.toFixed(2), "V:", volatility(30), currdatetime, 'BUY!');
 
 fs.writeFile('./bk_trader/buyPrice.txt',buyPrice,function(err){
 	if(err)
@@ -246,13 +263,13 @@ fs.writeFile('./bk_trader/buyPrice.txt',buyPrice,function(err){
 	// console.log('Appended!');
 });
 
-fs.appendFile('./bk_trader/register.txt',buyPrice + "\t" + jOld + "\t" + jLast + "\tT:" + trend.toFixed(2) + "\t" + currdatetime + "\t" + 'BUY!' + "\n",function(err){
+fs.appendFile('./bk_trader/register.txt',buyPrice + "\t" + jArch + "\t" + jOld + "\t" + jLast + "\t" + jCurr + "\tTrend:" + trend.toFixed(2) + "\t" + "\tVolatility:" + volatility(30) + "\t" + currdatetime + "\t" + 'BUY!' + "\n",function(err){
 	if(err)
 	console.error(err);
 	// console.log('Appended!');
 });
 
-// bot.sendMessage(msg.chat.id, "bkobalava", sbuyPrice + "\t" + jOld + "\t" + jLast + "\tT:" + trend.toFixed(2) + "\t" + currdatetime + "\t" + 'BUY!' + "\n").then(function () {
+// bot.sendMessage(msg.chat.id, "bkobalava", buyPrice + "\t" + jArch + "\t" + jOld + "\t" + jLast + "\t" + jCurr + "\tTrend:" + trend.toFixed(2) + "\t" + "\tVolatility:" + volatility(30) + "\t" + currdatetime + "\t" + 'BUY!' + "\n").then(function () {
     // reply sent!
   // });
 }
@@ -260,29 +277,36 @@ fs.appendFile('./bk_trader/register.txt',buyPrice + "\t" + jOld + "\t" + jLast +
 // console.log(buyPrice);	
 	  
      if (buyPrice != 0) { 
-sellPrice = closeA[ticks.length - 2];
-profit = (sellPrice - buyPrice) / buyPrice * 100;
+sellPrice = closeA[closeA.length - 1]; //hotPrice
+profit = ((sellPrice - buyPrice) / buyPrice * 100) - 0.1;
+
+  process.stdout.clearLine();  // clear current text
+  process.stdout.cursorTo(0);  // move cursor to beginning of line
+  process.stdout.write(buyPrice+"/"+sellPrice+" Profit:"+profit.toFixed(2)+" J:"+jCurr+'\r');
+// console.log(buyPrice, "/", sellPrice, " Profit:", profit.toFixed(2), " J:", jCurr);
+  
 // if (profit < -2 || jCurr > 90) { /////////////////Algotithm 1
 // if (profit < -2 || jCurr - jOld > 10) { /////////////////Algotithm 2
 // if (profit < - 2 || (jLast > jOld && jLast > jCurr && jLast > 90)) { /////////////////Algotithm 3
-if (profit < - 2 || ((jLast > jOld && jLast - jCurr > 5) || profit >= 0.1)) { /////////////////Algotithm 4
+// if (profit < - 2 || ((jArch >= jOld && jLast > jOld && jLast - jCurr > 5) || profit >= 0.1)) { /////////////////Algotithm 4
+if (profit < -1 || (profit >= 0.5 && closeA[closeA.length - 3] > closeA[closeA.length - 2])) { /////////////////Algotithm 5
 
-console.log(sellPrice, jOld, jLast, "T:", trend.toFixed(2), currdatetime, profit.toFixed(2), "%, SELL!");
-bot.sendMessage(sellPrice, jOld, jLast, "T:", trend.toFixed(2), currdatetime, profit.toFixed(2), "%, SELL!");
+console.log(sellPrice, jArch, jOld, jLast, jCurr, "T:", trend.toFixed(2), "V:", volatility(30), currdatetime, "Profit:", profit.toFixed(2), "%, SELL!");
+bot.sendMessage(sellPrice, jArch, jOld, jLast, jCurr, "T:", trend.toFixed(2), "V:", volatility(30), currdatetime, "Profit:", profit.toFixed(2), "%, SELL!");
 buyPrice = 0;
 fs.writeFile('./bk_trader/buyPrice.txt',buyPrice,function(err){  //
 	if(err)
 	console.error(err);
 	// console.log('Appended!');
 });
-bank = bank + profit - 0.1
-fs.appendFile('./bk_trader/register.txt',sellPrice + "\t" + jOld + "\t" + jLast + "\tT:" + trend.toFixed(2) + "\t" + currdatetime + "\t" + 'SELL!' + "\t" + profit.toFixed(2)+ "% " + "(" + bank.toFixed(2) +")\n\n",function(err){
+// bank = bank + profit - 0.1
+fs.appendFile('./bk_trader/register.txt',sellPrice + "\t" + jArch + "\t" + jOld + "\t" + jLast + "\t" + jCurr + "\tTrend:" + trend.toFixed(2) + "\t" + "\tVolatility:" + volatility(30) + "\t" + currdatetime + "\t" + 'SELL!' + "\t" + "Profit:" + profit.toFixed(2)+ "% \n\n",function(err){
 	if(err)
 	console.error(err);
 	// console.log('Appended!');
 });
 
-// bot.sendMessage(msg.chat.id, "bkobalava", sellPrice + "\t" + jAnt + "\t" + jOld + "\t" + jCurr + "\t" + currdatetime + "\t" + 'SELL!' + "\t" + profit.toFixed(2)+ "%\n\n").then(function () {
+// bot.sendMessage(msg.chat.id, "bkobalava", sellPrice + "\t" + jArch + "\t" + jOld + "\t" + jLast + "\t" + jCurr + "\tTrend:" + trend.toFixed(2) + "\t" + "\tVolatility:" + volatility(30) + "\t" + currdatetime + "\t" + 'SELL!' + "\t" + "Profit:" + profit.toFixed(2)+ "% \n\n").then(function () {
     // reply sent!
   // });
 }
@@ -296,3 +320,4 @@ fs.appendFile('./bk_trader/register.txt',sellPrice + "\t" + jOld + "\t" + jLast 
 }, 30000);
 
 //////////////////////////////////////////////////////////////////////////////////
+

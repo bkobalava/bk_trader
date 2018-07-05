@@ -203,7 +203,7 @@ closeA.push(tick[4]); //close price
 
 var trend = (sma[sma.length - 2] - sma[sma.length - 27]) / sma[sma.length - 2] * 100;
 /////////////////////////////////////////////////////////
-function volatility(n) {
+function volatility(n) {  //ბოლო n სანთელში მაქსიმუმ რამდენი პროცენტის მოგების შანსია (რამდენი პროცენტით მერყეობს ფასი)
 var mnm = closeA[closeA.length - (n + 1)];
 var mxm = closeA[closeA.length - (n + 1)];
 for (i = closeA.length - n; i < closeA.length; i++) {
@@ -241,7 +241,7 @@ var currdatetime = new Date();
 // if (prevCurr != jNow[0] && prevCurr != 0) {
 if (prevCurr != jCurr) {
 // console.log(prevCurr, jCurr);
-console.log(closeA[ticks.length - 2], jArch, jOld, jLast, jCurr, "T:", trend.toFixed(2), "V:", volatility(30), currdatetime, buyPrice);
+console.log(closeA[closeA.length - 2], jArch, jOld, jLast, jCurr, "T:", trend.toFixed(2), "V:", volatility(30), currdatetime, buyPrice);
 prevCurr = jCurr;
 }
 ///////////////////////////////////////////////BUY!BUY!BUY!BUY!BUY!BUY!BUY!BUY!
@@ -250,9 +250,10 @@ prevCurr = jCurr;
       // if (jOld - jCurr > 10 && buyPrice == 0) { /////////////////Algotithm 2
       // if ((jOld > jLast) && (jCurr > jLast) && (jLast < 10) && (buyPrice == 0)) { /////////////////Algotithm 3
       // if (jArch >= jOld && jOld > jLast && jCurr - jLast > 5 && buyPrice == 0 && trend >= 0) { /////////////////Algotithm 4
-      if (jArch >= jOld && jOld > jLast && jCurr - jLast > 5 && buyPrice == 0 && jCurr < 15) { /////////////////Algotithm 4
+      // if (jArch > jOld && jOld > jLast && jCurr - jLast > 5 && buyPrice == 0 && jCurr < 30) { /////////////////Algotithm 5
+      if (jArch > jOld && jOld > jLast && jCurr - jLast > 5 && buyPrice == 0) { /////////////////Algotithm 5
 	  
-buyPrice = closeA[ticks.length - 1]; //hotPrice
+buyPrice = closeA[closeA.length - 1]; //hotPrice
 console.log(buyPrice, jArch, jOld, jLast, jCurr, "T:", trend.toFixed(2), "V:", volatility(30), currdatetime, 'BUY!');
 // bot.sendMessage(buyPrice, jArch, jOld, jLast, jCurr, "T:", trend.toFixed(2), "V:", volatility(30), currdatetime, 'BUY!');
 
@@ -276,7 +277,7 @@ fs.appendFile('./bk_trader/register.txt',buyPrice + "\t" + jArch + "\t" + jOld +
 // console.log(buyPrice);	
 	  
      if (buyPrice != 0) { 
-sellPrice = closeA[ticks.length - 1]; //hotPrice
+sellPrice = closeA[closeA.length - 1]; //hotPrice
 profit = ((sellPrice - buyPrice) / buyPrice * 100) - 0.1;
 
   process.stdout.clearLine();  // clear current text
@@ -288,7 +289,7 @@ profit = ((sellPrice - buyPrice) / buyPrice * 100) - 0.1;
 // if (profit < -2 || jCurr - jOld > 10) { /////////////////Algotithm 2
 // if (profit < - 2 || (jLast > jOld && jLast > jCurr && jLast > 90)) { /////////////////Algotithm 3
 // if (profit < - 2 || ((jArch >= jOld && jLast > jOld && jLast - jCurr > 5) || profit >= 0.1)) { /////////////////Algotithm 4
-if (profit < -1 || profit >= 0.5) { /////////////////Algotithm 5
+if (profit < -1 || (profit >= 0.5 && closeA[closeA.length - 3] > closeA[closeA.length - 2])) { /////////////////Algotithm 5
 
 console.log(sellPrice, jArch, jOld, jLast, jCurr, "T:", trend.toFixed(2), "V:", volatility(30), currdatetime, "Profit:", profit.toFixed(2), "%, SELL!");
 // bot.sendMessage(sellPrice, jArch, jOld, jLast, jCurr, "T:", trend.toFixed(2), "V:", volatility(30), currdatetime, "Profit:", profit.toFixed(2), "%, SELL!");
