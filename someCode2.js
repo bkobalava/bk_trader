@@ -37,7 +37,8 @@ const server = http.createServer((req, res) => {
 
 server.listen(port, hostname, () => {
   console.log(`Server running at http://${hostname}:${port}/`);
-});///////////////////////////////////////////////
+});
+///////////////////////////////////////////////
 	
 	const binance = require('node-binance-api');
 binance.options({
@@ -251,7 +252,7 @@ prevCurr = jCurr;
       // if ((jOld > jLast) && (jCurr > jLast) && (jLast < 10) && (buyPrice == 0)) { /////////////////Algotithm 3
       // if (jArch >= jOld && jOld > jLast && jCurr - jLast > 5 && buyPrice == 0 && trend >= 0) { /////////////////Algotithm 4
       // if (jArch > jOld && jOld > jLast && jCurr - jLast > 5 && buyPrice == 0 && jCurr < 30) { /////////////////Algotithm 5
-      if (jArch > jOld && jOld > jLast && jCurr - jLast > 5 && buyPrice == 0) { /////////////////Algotithm 5
+      if (jArch > jOld && jOld > jLast && jCurr > jLast && buyPrice == 0) { /////////////////Algotithm 5
 	  
 buyPrice = closeA[closeA.length - 1]; //hotPrice
 console.log(buyPrice, jArch, jOld, jLast, jCurr, "T:", trend.toFixed(2), "V:", volatility(30), currdatetime, 'BUY!');

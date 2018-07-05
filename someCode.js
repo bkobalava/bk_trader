@@ -7,16 +7,16 @@
 // bot.sendMessage(USER, "Hello!");
 
 
-var token = '579762785:AAH0u9I-puuHw6ZeWmBKLJ9_d9ho_6XSyhg';
-var Bot = require('node-telegram-bot-api'),
-    bot = new Bot(token, { polling: true });
-console.log('bot server started...');
-bot.onText(/^\/hi (.+)$/, function (msg, match) {
-  var name = match[1];
-  bot.sendMessage(msg.chat.id, 'Hello Sir' + name + '!').then(function () {
-    reply sent!
-  });
-});
+// var token = '579762785:AAH0u9I-puuHw6ZeWmBKLJ9_d9ho_6XSyhg';
+// var Bot = require('node-telegram-bot-api'),
+    // bot = new Bot(token, { polling: true });
+// console.log('bot server started...');
+// bot.onText(/^\/hi (.+)$/, function (msg, match) {
+  // var name = match[1];
+  // bot.sendMessage(msg.chat.id, 'Hello Sir' + name + '!').then(function () {
+    // reply sent!
+  // });
+// });
 
 // https://api.telegram.org/bot579762785:AAH0u9I-puuHw6ZeWmBKLJ9_d9ho_6XSyhg/getUpdates
 //"id":522244663,"is_bot":false,"first_name":"Badri","last_name":"Kobalava","username":"bkobalava"
@@ -24,20 +24,21 @@ bot.onText(/^\/hi (.+)$/, function (msg, match) {
 process.stdin.setEncoding('utf8');
 fs=require('fs');
 ///////////////////////////////////////////////
-const http = require('http');
+// const http = require('http');
 
-const hostname = '127.0.0.1';
-const port = 3000;
+// const hostname = '127.0.0.1';
+// const port = 3000;
 
-const server = http.createServer((req, res) => {
-  res.statusCode = 200;
-  res.setHeader('Content-Type', 'text/plain');
-  res.end('Hello World\n');
-});
+// const server = http.createServer((req, res) => {
+  // res.statusCode = 200;
+  // res.setHeader('Content-Type', 'text/plain');
+  // res.end('Hello World\n');
+// });
 
-server.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
-});///////////////////////////////////////////////
+// server.listen(port, hostname, () => {
+  // console.log(`Server running at http://${hostname}:${port}/`);
+// });
+///////////////////////////////////////////////
 	
 	const binance = require('node-binance-api');
 binance.options({
@@ -62,7 +63,7 @@ var profit = 0;
 var bank = 0;
 var prevCurr = 0;	
 
-fs.readFile('./bk_trader/buyPrice.txt', function (err, data) {
+fs.readFile('buyPrice.txt', function (err, data) {
 	if (err) {
 	return console.error(err);
 	}
@@ -251,19 +252,19 @@ prevCurr = jCurr;
       // if ((jOld > jLast) && (jCurr > jLast) && (jLast < 10) && (buyPrice == 0)) { /////////////////Algotithm 3
       // if (jArch >= jOld && jOld > jLast && jCurr - jLast > 5 && buyPrice == 0 && trend >= 0) { /////////////////Algotithm 4
       // if (jArch > jOld && jOld > jLast && jCurr - jLast > 5 && buyPrice == 0 && jCurr < 30) { /////////////////Algotithm 5
-      if (jArch > jOld && jOld > jLast && jCurr - jLast > 5 && buyPrice == 0) { /////////////////Algotithm 5
+      if (jArch > jOld && jOld > jLast && jCurr > jLast && buyPrice == 0) { /////////////////Algotithm 5
 	  
 buyPrice = closeA[closeA.length - 1]; //hotPrice
 console.log(buyPrice, jArch, jOld, jLast, jCurr, "T:", trend.toFixed(2), "V:", volatility(30), currdatetime, 'BUY!');
-bot.sendMessage(buyPrice, jArch, jOld, jLast, jCurr, "T:", trend.toFixed(2), "V:", volatility(30), currdatetime, 'BUY!');
+// bot.sendMessage(buyPrice, jArch, jOld, jLast, jCurr, "T:", trend.toFixed(2), "V:", volatility(30), currdatetime, 'BUY!');
 
-fs.writeFile('./bk_trader/buyPrice.txt',buyPrice,function(err){
+fs.writeFile('buyPrice.txt',buyPrice,function(err){
 	if(err)
 	console.error(err);
 	// console.log('Appended!');
 });
 
-fs.appendFile('./bk_trader/register.txt',buyPrice + "\t" + jArch + "\t" + jOld + "\t" + jLast + "\t" + jCurr + "\tTrend:" + trend.toFixed(2) + "\t" + "\tVolatility:" + volatility(30) + "\t" + currdatetime + "\t" + 'BUY!' + "\n",function(err){
+fs.appendFile('register.txt',buyPrice + "\t" + jArch + "\t" + jOld + "\t" + jLast + "\t" + jCurr + "\tTrend:" + trend.toFixed(2) + "\t" + "\tVolatility:" + volatility(30) + "\t" + currdatetime + "\t" + 'BUY!' + "\n",function(err){
 	if(err)
 	console.error(err);
 	// console.log('Appended!');
@@ -280,9 +281,9 @@ fs.appendFile('./bk_trader/register.txt',buyPrice + "\t" + jArch + "\t" + jOld +
 sellPrice = closeA[closeA.length - 1]; //hotPrice
 profit = ((sellPrice - buyPrice) / buyPrice * 100) - 0.1;
 
-  process.stdout.clearLine();  // clear current text
-  process.stdout.cursorTo(0);  // move cursor to beginning of line
-  process.stdout.write(buyPrice+"/"+sellPrice+" Profit:"+profit.toFixed(2)+" J:"+jCurr+'\r');
+  // process.stdout.clearLine();  // clear current text
+  // process.stdout.cursorTo(0);  // move cursor to beginning of line
+  // process.stdout.write(buyPrice+"/"+sellPrice+" Profit:"+profit.toFixed(2)+" J:"+jCurr+'\r');
 // console.log(buyPrice, "/", sellPrice, " Profit:", profit.toFixed(2), " J:", jCurr);
   
 // if (profit < -2 || jCurr > 90) { /////////////////Algotithm 1
@@ -292,15 +293,15 @@ profit = ((sellPrice - buyPrice) / buyPrice * 100) - 0.1;
 if (profit < -1 || (profit >= 0.5 && closeA[closeA.length - 3] > closeA[closeA.length - 2])) { /////////////////Algotithm 5
 
 console.log(sellPrice, jArch, jOld, jLast, jCurr, "T:", trend.toFixed(2), "V:", volatility(30), currdatetime, "Profit:", profit.toFixed(2), "%, SELL!");
-bot.sendMessage(sellPrice, jArch, jOld, jLast, jCurr, "T:", trend.toFixed(2), "V:", volatility(30), currdatetime, "Profit:", profit.toFixed(2), "%, SELL!");
+// bot.sendMessage(sellPrice, jArch, jOld, jLast, jCurr, "T:", trend.toFixed(2), "V:", volatility(30), currdatetime, "Profit:", profit.toFixed(2), "%, SELL!");
 buyPrice = 0;
-fs.writeFile('./bk_trader/buyPrice.txt',buyPrice,function(err){  //
+fs.writeFile('buyPrice.txt',buyPrice,function(err){  //
 	if(err)
 	console.error(err);
 	// console.log('Appended!');
 });
 // bank = bank + profit - 0.1
-fs.appendFile('./bk_trader/register.txt',sellPrice + "\t" + jArch + "\t" + jOld + "\t" + jLast + "\t" + jCurr + "\tTrend:" + trend.toFixed(2) + "\t" + "\tVolatility:" + volatility(30) + "\t" + currdatetime + "\t" + 'SELL!' + "\t" + "Profit:" + profit.toFixed(2)+ "% \n\n",function(err){
+fs.appendFile('register.txt',sellPrice + "\t" + jArch + "\t" + jOld + "\t" + jLast + "\t" + jCurr + "\tTrend:" + trend.toFixed(2) + "\t" + "\tVolatility:" + volatility(30) + "\t" + currdatetime + "\t" + 'SELL!' + "\t" + "Profit:" + profit.toFixed(2)+ "% \n\n",function(err){
 	if(err)
 	console.error(err);
 	// console.log('Appended!');

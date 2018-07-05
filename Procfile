@@ -1,1 +1,1 @@
-`web: ./node_modules/.bin/forever -m 5 someCode.js' 
+worker: node someCode.js
