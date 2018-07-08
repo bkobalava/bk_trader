@@ -62,7 +62,7 @@ var sellPrice = 0;
 var profit = 0;
 var bank = 0;
 var prevCurr = 0;	
-
+bot.sendMessage('Bot lounched!');
 fs.readFile('buyPrice.txt', function (err, data) {
 	if (err) {
 	return console.error(err);
