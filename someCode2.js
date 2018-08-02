@@ -48,7 +48,7 @@ binance.options({
 ///////////////////////////////////////////////
 
 binance.prices('BNBBTC', (error, ticker) => {
-  console.log("Price of BNB: ", ticker.BNBBTC);
+  console.log("Price of BNB:", ticker.BNBBTC);
 });
 
 	console.log('\033c')	//Windows
@@ -56,7 +56,7 @@ binance.prices('BNBBTC', (error, ticker) => {
 	console.log('------------------------------')
 	console.log(' BNBBTC; 15 min time frame')
 	console.log('------------------------------')
-
+// bot.sendMessage('Bot lounched!');
 var buyPrice = 0;
 var sellPrice = 0;
 var profit = 0;
@@ -174,10 +174,10 @@ closeA.push(tick[4]); //close price
 		js.push((3 * ks[i]) - (2 * ds[i]));
 //SMA25:		
 		var sum = 0;
-		for (var n = i - 25; n < i + 1; n++) {
+		for (var n = i - 20; n < i + 1; n++) {
 		sum += Number(closeA[n]);  
 		}
-		sma.push(sum / 25);
+		sma.push(sum / 20);
 
 		}
 
@@ -202,7 +202,26 @@ closeA.push(tick[4]); //close price
 // console.log(highA[i], maximum[i], lowA[i], minimum[i], closeA[i]);
 	// }
 
-var trend = (sma[sma.length - 2] - sma[sma.length - 27]) / sma[sma.length - 2] * 100;
+function trend(n) {  //ბოლო n სანთელში ფასმა რამდენი პოცენტით მოიმატა ან მოიკლო საშუალო ფასთან შედარებით
+// rslt = (sma[sma.length - 2] - sma[sma.length - n + 2]) / sma[sma.length - 2] * 100; //ტრენდის ძველი ფორმულა
+// console.log((sma[sma.length - 2] - sma[sma.length - n + 2]) / sma[sma.length - 2] * 100);
+var rslt = 0;
+var aver = 0;
+for (i = closeA.length - n; i < closeA.length; i++) {
+	aver += Number(closeA[i]);
+// console.log(i, aver);
+}
+aver = aver / n;
+// console.log(aver);
+for (i = closeA.length - n; i < closeA.length; i++) {
+	rslt += (closeA[i] - closeA[i - 1]);
+// console.log(i, rslt);
+	}
+rslt = rslt * 100 / aver;
+// console.log(rslt);
+return rslt.toFixed(2);	
+}
+
 /////////////////////////////////////////////////////////
 function volatility(n) {  //ბოლო n სანთელში მაქსიმუმ რამდენი პროცენტის მოგების შანსია (რამდენი პროცენტით მერყეობს ფასი)
 var mnm = closeA[closeA.length - (n + 1)];
@@ -221,10 +240,10 @@ return rslt.toFixed(1);
 		
 // console.log('\033c');
     // for (var i = rsvs.length - 30 ; i < rsvs.length; i++) {
-// console.log(closeA[i], "k:", ks[i].toFixed(1), "d:", ds[i].toFixed(1), "j:", js[i].toFixed(1));
+// console.log(closeA[i], "k:" + ks[i].toFixed(1), "d:" + ds[i].toFixed(1), "j:" + js[i].toFixed(1));
 	// }
 
-// console.log(js[js.length-4].toFixed(1), js[js.length-3].toFixed(1), js[js.length-2].toFixed(1), js[js.length-1].toFixed(1), trend.toFixed(2));
+// console.log(js[js.length-4].toFixed(1), js[js.length-3].toFixed(1), js[js.length-2].toFixed(1), js[js.length-1].toFixed(1), trend(30));
 
 var jHot = js[js.length-1];
 jHot = jHot.toFixed(1);
@@ -242,7 +261,7 @@ var currdatetime = new Date();
 // if (prevCurr != jNow[0] && prevCurr != 0) {
 if (prevCurr != jCurr) {
 // console.log(prevCurr, jCurr);
-console.log(closeA[closeA.length - 2], jArch, jOld, jLast, jCurr, "T:", trend.toFixed(2), "V:", volatility(20), currdatetime, buyPrice);
+console.log(closeA[closeA.length - 2], jArch, jOld, jLast, jCurr, "T:" + trend(30), "V:" + volatility(20), getDateTime(), buyPrice);
 prevCurr = jCurr;
 }
 ///////////////////////////////////////////////BUY!BUY!BUY!BUY!BUY!BUY!BUY!BUY!
@@ -250,13 +269,13 @@ prevCurr = jCurr;
       // if (jCurr < 0 && buyPrice == 0) { /////////////////Algotithm 1
       // if (jOld - jCurr > 10 && buyPrice == 0) { /////////////////Algotithm 2
       // if ((jOld > jLast) && (jCurr > jLast) && (jLast < 10) && (buyPrice == 0)) { /////////////////Algotithm 3
-      // if (jArch >= jOld && jOld > jLast && jCurr - jLast > 5 && buyPrice == 0 && trend >= 0) { /////////////////Algotithm 4
+      // if (jArch >= jOld && jOld > jLast && jCurr - jLast > 5 && buyPrice == 0 && trend(30) >= 0) { /////////////////Algotithm 4
       // if (jArch > jOld && jOld > jLast && jCurr - jLast > 5 && buyPrice == 0 && jCurr < 30) { /////////////////Algotithm 5
-      if ((jArch > jOld) && (jOld > jLast) && (jCurr > jLast) && (buyPrice == 0) && (trend > 0) && (volatility(20) > 1)) { /////////////////Algotithm 5
+      if ((jCurr < 30) && (jArch > jOld) && (jOld > jLast) && (jCurr - jLast > 10) && (buyPrice == 0) && (trend(30) > -0.5) && (volatility(20) > 1)) { /////////////////Algotithm 5
 	  
 buyPrice = closeA[closeA.length - 1]; //hotPrice
-console.log(buyPrice, jArch, jOld, jLast, jCurr, "T:", trend.toFixed(2), "V:", volatility(20), currdatetime, 'BUY!');
-// bot.sendMessage(buyPrice, jArch, jOld, jLast, jCurr, "T:", trend.toFixed(2), "V:", volatility(20), currdatetime, 'BUY!');
+console.log(buyPrice, jArch, jOld, jLast, jCurr, "T:" + trend(30), "V:" + volatility(20), getDateTime(), 'BUY!');
+// bot.sendMessage(buyPrice, jArch, jOld, jLast, jCurr, "T:" + trend(30), "V:" + volatility(20), getDateTime(), 'BUY!');
 
 fs.writeFile('./bk_trader/buyPrice.txt',buyPrice,function(err){
 	if(err)
@@ -264,13 +283,13 @@ fs.writeFile('./bk_trader/buyPrice.txt',buyPrice,function(err){
 	// console.log('Appended!');
 });
 
-fs.appendFile('./bk_trader/register.txt',buyPrice + "\t" + jArch + "\t" + jOld + "\t" + jLast + "\t" + jCurr + "\tTrend:" + trend.toFixed(2) + "\t" + "\tVolatility:" + volatility(20) + "\t" + currdatetime + "\t" + 'BUY!' + "\n",function(err){
+fs.appendFile('./bk_trader/register.txt',buyPrice + "\t" + jArch + "\t" + jOld + "\t" + jLast + "\t" + jCurr + "\tTrend:" + trend(30) + "\t" + "\tVolatility:" + volatility(20) + "\t" + getDateTime() + "\t" + 'BUY!' + "\n",function(err){
 	if(err)
 	console.error(err);
 	// console.log('Appended!');
 });
 
-// bot.sendMessage(msg.chat.id, "bkobalava", buyPrice + "\t" + jArch + "\t" + jOld + "\t" + jLast + "\t" + jCurr + "\tTrend:" + trend.toFixed(2) + "\t" + "\tVolatility:" + volatility(20) + "\t" + currdatetime + "\t" + 'BUY!' + "\n").then(function () {
+// bot.sendMessage(msg.chat.id, "bkobalava", buyPrice + "\t" + jArch + "\t" + jOld + "\t" + jLast + "\t" + jCurr + "\tTrend:" + trend(30) + "\t" + "\tVolatility:" + volatility(20) + "\t" + getDateTime() + "\t" + 'BUY!' + "\n").then(function () {
     // reply sent!
   // });
 }
@@ -283,17 +302,17 @@ profit = ((sellPrice - buyPrice) / buyPrice * 100) - 0.1;
 
   process.stdout.clearLine();  // clear current text
   process.stdout.cursorTo(0);  // move cursor to beginning of line
-  process.stdout.write(buyPrice+"/"+sellPrice+" Profit:"+profit.toFixed(2)+" J:"+jCurr+'\r');
-// console.log(buyPrice, "/", sellPrice, " Profit:", profit.toFixed(2), " J:", jCurr);
+  process.stdout.write("jCurr:"+jCurr+buyPrice+"/"+sellPrice+"=Profit:"+profit.toFixed(2)+" T:"+trend(30)+" V:"+volatility(20)+"\r");
+// console.log(buyPrice, "/", sellPrice, " Profit:" + profit.toFixed(2), " J:" + jCurr);
   
 // if (profit < -2 || jCurr > 90) { /////////////////Algotithm 1
 // if (profit < -2 || jCurr - jOld > 10) { /////////////////Algotithm 2
 // if (profit < - 2 || (jLast > jOld && jLast > jCurr && jLast > 90)) { /////////////////Algotithm 3
 // if (profit < - 2 || ((jArch >= jOld && jLast > jOld && jLast - jCurr > 5) || profit >= 0.1)) { /////////////////Algotithm 4
-if (profit < -1 || (profit >= 0.5 && closeA[closeA.length - 3] > closeA[closeA.length - 2])) { /////////////////Algotithm 5
+if (profit < -5 || ((profit >= 1) && (closeA[closeA.length - 3] > closeA[closeA.length - 2])) || (profit >= 0.5 && profit < 1)) { /////////////////Algotithm 5
 
-console.log(sellPrice, jArch, jOld, jLast, jCurr, "T:", trend.toFixed(2), "V:", volatility(20), currdatetime, "Profit:", profit.toFixed(2), "%, SELL!");
-// bot.sendMessage(sellPrice, jArch, jOld, jLast, jCurr, "T:", trend.toFixed(2), "V:", volatility(20), currdatetime, "Profit:", profit.toFixed(2), "%, SELL!");
+console.log(sellPrice, jArch, jOld, jLast, jCurr, "T:" + trend(30), "V:" + volatility(20), getDateTime(), "Profit:" + profit.toFixed(2), "%, SELL!");
+// bot.sendMessage(sellPrice, jArch, jOld, jLast, jCurr, "T:" + trend(30), "V:" + volatility(20), getDateTime(), "Profit:" + profit.toFixed(2), "%, SELL!");
 buyPrice = 0;
 fs.writeFile('./bk_trader/buyPrice.txt',buyPrice,function(err){  //
 	if(err)
@@ -301,13 +320,13 @@ fs.writeFile('./bk_trader/buyPrice.txt',buyPrice,function(err){  //
 	// console.log('Appended!');
 });
 // bank = bank + profit - 0.1
-fs.appendFile('./bk_trader/register.txt',sellPrice + "\t" + jArch + "\t" + jOld + "\t" + jLast + "\t" + jCurr + "\tTrend:" + trend.toFixed(2) + "\t" + "\tVolatility:" + volatility(20) + "\t" + currdatetime + "\t" + 'SELL!' + "\t" + "Profit:" + profit.toFixed(2)+ "% \n\n",function(err){
+fs.appendFile('./bk_trader/register.txt',sellPrice + "\t" + jArch + "\t" + jOld + "\t" + jLast + "\t" + jCurr + "\tTrend:" + trend(30) + "\t" + "\tVolatility:" + volatility(20) + "\t" + getDateTime() + "\t" + 'SELL!' + "\t\nProfit:" + profit.toFixed(2)+ "% \n\n",function(err){
 	if(err)
 	console.error(err);
 	// console.log('Appended!');
 });
 
-// bot.sendMessage(msg.chat.id, "bkobalava", sellPrice + "\t" + jArch + "\t" + jOld + "\t" + jLast + "\t" + jCurr + "\tTrend:" + trend.toFixed(2) + "\t" + "\tVolatility:" + volatility(20) + "\t" + currdatetime + "\t" + 'SELL!' + "\t" + "Profit:" + profit.toFixed(2)+ "% \n\n").then(function () {
+// bot.sendMessage(msg.chat.id, "bkobalava", sellPrice + "\t" + jArch + "\t" + jOld + "\t" + jLast + "\t" + jCurr + "\tTrend:" + trend(30) + "\t" + "\tVolatility:" + volatility(20) + "\t" + getDateTime() + "\t" + 'SELL!' + "\t\nProfit:" + profit.toFixed(2)+ "% \n\n").then(function () {
     // reply sent!
   // });
 }
@@ -322,3 +341,28 @@ fs.appendFile('./bk_trader/register.txt',sellPrice + "\t" + jArch + "\t" + jOld 
 
 //////////////////////////////////////////////////////////////////////////////////
 
+function getDateTime() {
+
+    var date = new Date();
+
+    var hour = date.getHours();
+    hour = (hour < 10 ? "0" : "") + hour;
+
+    var min  = date.getMinutes();
+    min = (min < 10 ? "0" : "") + min;
+
+    var sec  = date.getSeconds();
+    sec = (sec < 10 ? "0" : "") + sec;
+
+    var year = date.getFullYear();
+
+    var month = date.getMonth() + 1;
+    month = (month < 10 ? "0" : "") + month;
+
+    var day  = date.getDate();
+    day = (day < 10 ? "0" : "") + day;
+
+    // return year + ":" + month + ":" + day + ":" + hour + ":" + min + ":" + sec;
+    return day + "/" + month + "/" + year + " " + hour + ":" + min;
+
+}
